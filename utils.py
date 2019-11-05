@@ -20,6 +20,17 @@ def read_data(file, gdp_file):
     df_gdp = pd.merge(df, gdp_data, on='NativeCountry', how='left')
 
     data = df_gdp
+    # Map Categorical variables
+    data['MaritalStatusMap'] = 1
+    data.loc[data['MaritalStatus'] == 'Never-married', 'MaritalStatusMap'] = 0
+
+    data['RelationshipMap'] = 4
+    data.loc[data['Relationship'] == 'Unmarried', 'RelationshipMap'] = 3
+    data.loc[data['Relationship'] == 'Not-in-family', 'RelationshipMap'] = 2
+    data.loc[data['Relationship'] == 'Other-relative', 'RelationshipMap'] = 1
+    data.loc[data['Relationship'] == 'Own-child', 'RelationshipMap'] = 0
+
+
 
     return data
 

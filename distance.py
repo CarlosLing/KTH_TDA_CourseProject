@@ -1,6 +1,13 @@
 import pandas as pd
 import numpy as np
 
+AGE_RANGE = 73
+EDUCATION_RANGE = 15
+HPW_RANGE = 98
+CAPITAL_RANGE = 104355
+RELATIONSHIP_RANGE = 4
+GDP_RANGE = 29126.373789999998
+
 
 def dist(a, b):
 
@@ -9,19 +16,29 @@ def dist(a, b):
     The methodology to compute the distances simply computes the distances regarding different variables, and computes
     the Mean Square Distance"""
 
-    # Age
-    Age = abs(a.Age - b.Age)
-    Education = abs(a.EducationNum - b.EducationNum)
+    # Individual distances
+
+    # Continuous variables
+    Age = abs(a.Age - b.Age) / AGE_RANGE
+    Education = abs(a.EducationNum - b.EducationNum) / EDUCATION_RANGE
+    HoursPerWeek = abs(a.HoursPerWeek - b.HoursPerWeek) / HPW_RANGE
+    NetCapital = abs(a.NetCapital - b.NetCapital) / CAPITAL_RANGE
+
+    # Discrete distances
     Gender = 1 * (a.Gender != b.Gender)
+    Race = 1 * (a.Race != b.Race)
+
+    # The following distances might admit a map
     WorkClass = 1 * (a.WorkClass != b.WorkClass)
     MaritalStatus = 1 * (a.MaritalStatus != b.MaritalStatus)
     Occupation = 1 * (a.Occupation != b.Occupation)
-    Relationship = 1 * (a.Relationship != b.Relationship)
-    HoursPerWeek = abs(a.HoursPerWeek - b.HoursPerWeek)
-    Country = abs(a.GDP_PC - b.GDP_PC)
-    NetCapital = abs(a.NetCapital - b.NetCapital)
+
+    # Check this distances
+    # Categorical distances with mapping
+    Relationship = abs(a.RelationshipMap != b.RelationshipMap) / RELATIONSHIP_RANGE
+    Country = abs(a.GDP_PC - b.GDP_PC) / GDP_RANGE
 
     distance = np.sqrt(Age**2 + Education**2 + Gender**2 + WorkClass**2 + MaritalStatus**2 +
-                       Occupation**2 + Relationship**2 + HoursPerWeek**2 + Country**2 + NetCapital**2)
+                       Occupation**2 + Relationship**2 + HoursPerWeek**2 + Country**2 + NetCapital**2 + Race**2)
 
     return distance

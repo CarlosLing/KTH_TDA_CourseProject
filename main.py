@@ -5,5 +5,5 @@ from utils import read_data
 
 if __name__ == '__main__':
 
-    data = read_data('adult.data', 'GDP_percapita_complete.csv')
+    data = read_data('adult.data', gdp_file='GDP_percapita_complete.csv')
 
