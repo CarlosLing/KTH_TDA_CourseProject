@@ -17,7 +17,7 @@ def read_data(file, gdp_file):
     df = df.drop(['Education', 'CapitalGain', 'CapitalLoss'], 1)
 
     gdp_data = pd.read_csv(path_gdp)
-    df_gdp = pd.merge(df, gdp_data, on='NativeCountry', how='left')
+    df_gdp = pd.merge(df, gdp_data, on='NativeCountry', how='inner')
 
     data = df_gdp
     # Map Categorical variables
