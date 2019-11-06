@@ -34,3 +34,9 @@ def read_data(file, gdp_file):
 
     return data
 
+
+def read_GDP(location):
+    path_gdp = os.path.expanduser(location)
+    gdp_data = pd.read_csv(path_gdp)
+    gdp_data.set_index("NativeCountry", inplace=True)
+    return gdp_data
