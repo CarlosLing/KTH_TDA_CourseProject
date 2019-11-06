@@ -42,3 +42,21 @@ def dist(a, b):
                        Occupation**2 + Relationship**2 + HoursPerWeek**2 + Country**2 + NetCapital**2 + Race**2)
 
     return distance
+
+
+def get_distance_matrix(data:pd.DataFrame, N):
+
+    if N > len(data):
+        raise ValueError("The Sampling size Exceeds the size of the input data")
+
+    D = np.zeros((N,N))
+
+    sampled_data = data.sample(N)
+
+    for i in range(N):
+        for j in range(i):
+            d = dist(sampled_data.iloc[i], sampled_data.iloc[j])
+            D[i, j] = d
+            D[j, i] = d
+
+    return D, sampled_data
