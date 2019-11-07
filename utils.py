@@ -30,8 +30,6 @@ def read_data(file, gdp_file):
     data.loc[data['Relationship'] == 'Other-relative', 'RelationshipMap'] = 1
     data.loc[data['Relationship'] == 'Own-child', 'RelationshipMap'] = 0
 
-
-
     return data
 
 

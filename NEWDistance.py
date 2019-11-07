@@ -6,14 +6,11 @@ from utils import read_GDP
 def p_norm(values1, values2, p=1):
     return np.linalg.norm(np.subtract(values1, values2), ord=p);
 
-
 def p_norm_function(p):
     return lambda value1, value2: p_norm(value1, value2, p)
 
-
 def indicator(value1, value2):
     return 1 * (value1 != value2)
-
 
 gdp = read_GDP('GDP_percapita_complete.csv')
 def GDP(country1, country2, sub_func=p_norm_function(1)):
@@ -42,13 +39,17 @@ class Distance:
         self.country_dist = GDP
         self.aggregate_dists = np.linalg.norm
 
+        self.weights = np.ones(11)
+
     def standard_dist(self, point1, point2):
         dists = [self.age_dist([point1[0]], [point2[0]]), self.education_dist([point1[1]], [point2[1]]),
                  self.hours_dist([point1[2]], [point2[2]]), self.capital_dist([point1[3]], [point2[3]]),
                  self.gender_dist([point1[4]], [point2[4]]), self.race_dist([point1[5]], [point2[5]]),
                  self.work_class_dist([point1[6]], [point2[6]]), self.marital_status_dist([point1[7]], [point2[7]]),
-                 self.occupation_dist([point1[8]], [point2[8]]), self.country_dist([point1[9]], [point2[9]])];
+                 self.occupation_dist([point1[8]], [point2[8]]), self.relationship_dist([point1[9]], [point2[9]]),
+                 self.country_dist([point1[10]], [point2[10]])];
+        dists = np.multiply(np.asarray(dists), self.weights)
 
-        return self.aggregate_dists(np.asarray(dists))
+        return self.aggregate_dists(dists)
 
 # -------------------------DISTANCE CLASS-------------------------
