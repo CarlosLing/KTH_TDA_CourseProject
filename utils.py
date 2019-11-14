@@ -17,7 +17,7 @@ def read_data(file, gdp_file):
     df = df.drop(['Education', 'CapitalGain', 'CapitalLoss'], 1)
 
     gdp_data = pd.read_csv(path_gdp)
-    df_gdp = pd.merge(df, gdp_data, on='NativeCountry', how='left')
+    df_gdp = pd.merge(df, gdp_data, on='NativeCountry', how='inner')
 
     data = df_gdp
     # Map Categorical variables
@@ -30,7 +30,11 @@ def read_data(file, gdp_file):
     data.loc[data['Relationship'] == 'Other-relative', 'RelationshipMap'] = 1
     data.loc[data['Relationship'] == 'Own-child', 'RelationshipMap'] = 0
 
-
-
     return data
 
+
+def read_GDP(location):
+    path_gdp = os.path.expanduser(location)
+    gdp_data = pd.read_csv(path_gdp)
+    gdp_data.set_index("NativeCountry", inplace=True)
+    return gdp_data

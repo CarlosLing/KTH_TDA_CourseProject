@@ -44,6 +44,7 @@ def dist(a, b):
     return distance
 
 
+
 def get_distance_matrix(data:pd.DataFrame, N):
 
     if N > len(data):
