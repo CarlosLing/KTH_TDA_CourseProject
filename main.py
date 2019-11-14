@@ -15,6 +15,7 @@ plt.style.use('ggplot')
 import NEWDistance as dist
 from utils import read_data
 from TDA_analysis import tda_analysis
+from TDA_analysis import plot_results
 
 if __name__ == '__main__':
 
@@ -22,10 +23,12 @@ if __name__ == '__main__':
     d.weights[3] = 0.00001
     data = read_data('adult.data', gdp_file='GDP_percapita_complete.csv')
 
-    results = tda_analysis(data, variable='Gender')
+    results = tda_analysis(data, variable='Income', N_sig=50)
 
-    variable = 'Gender'
+    variable = 'Income'
     types = data[variable].unique()
+
+    plot_results(results, types, N_sig=50)
 
     plt.figure()
     results[t]['barcodes'][0].plot()

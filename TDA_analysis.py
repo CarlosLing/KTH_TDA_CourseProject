@@ -1,6 +1,9 @@
 import stableRANK as sr
 from distance import get_distance_matrix
+
 import numpy as np
+import matplotlib.pyplot as plt
+
 inf=float("inf")
 
 
@@ -54,3 +57,41 @@ def tda_analysis(data, variable='Income', N=50, N_sig=20):
         results[t]['sd_norm'].content[1] = np.sqrt(results[t]['sd_norm'].content[1])
 
     return results
+
+
+COLORS = ['red', 'blue', 'green', 'magenta']
+DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta']
+
+
+def plot_results(results, types, N_sig=20, xmax=1):
+
+    n_t = len(types)
+    plt.figure()
+    for i in range(n_t):
+        t = types[i]
+        color = COLORS[i]
+        dcolor = DCOLORS[i]
+        upper = results[t]['mean_norm'] + 2*results[t]['sd_norm']
+        lower = results[t]['mean_norm'] - 2*results[t]['sd_norm']
+        upper.plot(color=color)
+        results[t]['mean_norm'].plot(color=dcolor)
+        lower.plot(color=color)
+
+    plt.axis(xmax=xmax)
+    plt.show()
+
+    for i in range(n_t):
+        plt.figure()
+        t = types[i]
+        color = COLORS[i]
+        dcolor = DCOLORS[i]
+        for j in range(N_sig):
+            results[t]['normalized_sign'][j].plot(color='black', alpha = 0.2)
+        upper = results[t]['mean_norm'] + 2*results[t]['sd_norm']
+        lower = results[t]['mean_norm'] - 2*results[t]['sd_norm']
+        upper.plot(color=color)
+        results[t]['mean_norm'].plot(color=dcolor)
+        lower.plot(color=color)
+        plt.axis(xmax=xmax)
+        plt.show()
+
