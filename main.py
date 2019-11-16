@@ -1,26 +1,29 @@
-import pandas as pd
 import numpy as np
-from ripser import ripser
 from persim import plot_diagrams
-
-from utils import read_data
-from distance import get_distance_matrix
 from ripser import ripser
-import stableRANK as sr
-
-inf=float("inf")
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
-
-import NEWDistance as dist
+import NEWDistance as distance
 from utils import read_data
 from TDA_analysis import tda_analysis
+inf=float("inf")
 
 if __name__ == '__main__':
 
-    d = dist.Distance()
+    d = distance.Distance()
     d.weights[3] = 0.00001
+    d.weights[10] = 0.00001
     data = read_data('adult.data', gdp_file='GDP_percapita_complete.csv')
+
+    # ----------TDA Test----------
+    print("\nTDA Test:")
+    np.random.seed(3)
+    N = 20
+    sampled_data = data.sample(N)
+    D = d.distance_matrix(sampled_data)
+    diagrams = ripser(D, maxdim=1, distance_matrix=True)['dgms']
+    plot_diagrams(diagrams, show=True)
+
 
     results = tda_analysis(data, variable='Gender')
 
@@ -106,25 +109,3 @@ if __name__ == '__main__':
     print(d.standard_dist(d1v, d2v))
     print(d.standard_dist(d1v, d3v))
     print(d.standard_dist(d2v, d3v))
-
-    # ----------TDA Test----------
-    print("\nTDA Test:")
-    np.random.seed(5)
-    N = 75
-    D = np.zeros((N, N))
-    sampled_data = data.sample(N)
-    dist = dist.Distance()
-    dist.weights[3] = 0.00001
-    for i in range(N):
-        for j in range(i):
-            d1 = data.iloc[i]
-            d2 = data.iloc[j]
-            d1v = [d1.Age, d1.EducationNum, d1.HoursPerWeek, d1.NetCapital, d1.Gender, d1.Race,
-                   d1.WorkClass, d1.MaritalStatus, d1.Occupation, d2.Relationship, d1.NativeCountry]
-            d2v = [d2.Age, d2.EducationNum, d2.HoursPerWeek, d2.NetCapital, d2.Gender, d2.Race,
-                   d2.WorkClass, d2.MaritalStatus, d2.Occupation, d2.Relationship, d2.NativeCountry]
-            d = dist.standard_dist(d1v, d2v)
-            D[i, j] = d
-            D[j, i] = d
-    diagrams = ripser(D, maxdim=2, distance_matrix=True)['dgms']
-    plot_diagrams(diagrams, show=True)
