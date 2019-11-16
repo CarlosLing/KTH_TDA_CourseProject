@@ -2,28 +2,36 @@ import numpy as np
 from persim import plot_diagrams
 from ripser import ripser
 import matplotlib.pyplot as plt
+
 plt.style.use('ggplot')
 import NEWDistance as distance
 from utils import read_data
 from TDA_analysis import tda_analysis
-inf=float("inf")
+
+inf = float("inf")
 from TDA_analysis import plot_results
 
 if __name__ == '__main__':
 
-    d = distance.Distance()
-    d.weights[3] = 0.00001
-    d.weights[10] = 0.00001
     data = read_data('adult.data', gdp_file='GDP_percapita_complete.csv')
 
     # ----------Distance Matrix Test----------
-    print("\nTDA Test:")
-    np.random.seed(3)
-    N = 20
-    sampled_data = data.sample(N)
-    D = d.distance_matrix(sampled_data)
-    diagrams = ripser(D, maxdim=1, distance_matrix=True)['dgms']
-    plot_diagrams(diagrams, show=True)
+    d = distance.Distance()
+    d.weights['Income'] = 1;
+    class1 = data[data['Income'] == '<=50K']
+    class2 = data[data['Income'] == '>50K']
+
+    print("\nDistance Test:")
+    N = 50
+    np.random.seed(0)
+    sampled_class1 = class1.sample(N)
+    sampled_class2 = class2.sample(N)
+    class1_matrix = d.distance_matrix(sampled_class1)
+    class2_matrix = d.distance_matrix(sampled_class2)
+    class1_diagrams = ripser(class1_matrix, maxdim=1, distance_matrix=True)['dgms']
+    class2_diagrams = ripser(class2_matrix, maxdim=1, distance_matrix=True)['dgms']
+    plot_diagrams(class1_diagrams, show=True)
+    plot_diagrams(class2_diagrams, show=True)
 
     # ----------TDA Test----------
     results = tda_analysis(data, variable='Income', N_sig=50)
@@ -44,7 +52,7 @@ if __name__ == '__main__':
 
     t = types[0]
     N_sig = 20
-    plt. figure()
+    plt.figure()
     for i in range(N_sig):
         results[types[0]]['normalized_sign'][i].plot(color='red')
         results[types[1]]['normalized_sign'][i].plot(color='blue')
@@ -71,18 +79,12 @@ if __name__ == '__main__':
     results[types[0]]['normalized_sign'][0].plot()
     plt.show()
 
-    ### Here comes the analysis:
-
-
-
+    # Here comes the analysis:
     barcode = object.barcode(distance_matrix=True)
     barcode.plot("bar")
 
-
-
     plt.figure()
     signatures["H0"].plot()
-
 
     plt.figure()
     signatures["H1"].plot()

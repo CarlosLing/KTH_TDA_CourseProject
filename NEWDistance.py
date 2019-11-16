@@ -21,44 +21,66 @@ def indicator(value1, value2):
 gdp = read_GDP('GDP_percapita_complete.csv')
 
 
-def GDP(country1, country2, sub_func=p_norm_dist_function(1)):
+def GDP_dist(country1, country2, sub_func=p_norm_dist_function(1)):
     GDP1 = gdp.loc[country1]["GDP_PC"]
     GDP2 = gdp.loc[country2]["GDP_PC"]
     return sub_func(GDP1, GDP2)
 
 
-# -------------------------DISTANCE CLASS-------------------------
-# Create an instance and specify how you want this instance to behave,
-# what distances, weights and aggregation to use.
-
 class Distance:
-    def __init__(self):
-        self.p = 1
-        self.age_dist = p_norm_dist_function(self.p)
-        self.education_dist = p_norm_dist_function(self.p)
-        self.hours_dist = p_norm_dist_function(self.p)
-        self.capital_dist = p_norm_dist_function(self.p)
-        self.gender_dist = indicator
-        self.race_dist = indicator
-        self.work_class_dist = indicator
-        self.marital_status_dist = indicator
-        self.occupation_dist = indicator
-        self.relationship_dist = indicator
-        self.country_dist = GDP
-        self.aggregate_dists = np.linalg.norm
+    """
+    Distance class providing flexible distances.
 
-        self.weights = np.ones(11)
+    Attributes:
+        distances (dict): The distances for each variable and the aggregation distance.
+        weights (dict): The weighting for each of the sub-distances.
+                        !!!IMPORTANT!!! If predictive analysis is the goal set at least
+                        one of these to 0 to exclude it from the aggregated distance.
+    """
+    def __init__(self):
+        p = 1
+        self.distances = {
+            'Age': p_norm_dist_function(p),
+            'WorkClass': indicator,
+            'EducationNum': p_norm_dist_function(p),
+            'MaritalStatus': indicator,
+            'Occupation': indicator,
+            'Relationship': indicator,
+            'Race': indicator,
+            'Gender': indicator,
+            'HoursPerWeek': p_norm_dist_function(p),
+            'NativeCountry': GDP_dist,
+            'Income': indicator,
+            'NetCapital': p_norm_dist_function(p),
+            'Aggregate': np.linalg.norm
+        }
+
+        self.weights = {
+            'Age': 1,
+            'WorkClass': 1,
+            'EducationNum': 1,
+            'MaritalStatus': 1,
+            'Occupation': 1,
+            'Relationship': 1,
+            'Race': 1,
+            'Gender': 1,
+            'HoursPerWeek': 1,
+            'NativeCountry': 1e-5,
+            'Income': 1,
+            'NetCapital': 1e-5
+        }
 
     def standard_dist(self, point1, point2):
-        dists = [self.age_dist(point1[0], point2[0]), self.education_dist(point1[1], point2[1]),
-                 self.hours_dist(point1[2], point2[2]), self.capital_dist(point1[3], point2[3]),
-                 self.gender_dist(point1[4], point2[4]), self.race_dist(point1[5], point2[5]),
-                 self.work_class_dist(point1[6], point2[6]), self.marital_status_dist(point1[7], point2[7]),
-                 self.occupation_dist(point1[8], point2[8]), self.relationship_dist(point1[9], point2[9]),
-                 self.country_dist(point1[10], point2[10])];
-        dists = np.multiply(np.asarray(dists), self.weights)
+        d = self.distances
+        dists = [d['Age'](point1[0], point2[0]), d['WorkClass'](point1[1], point2[1]),
+                 d['EducationNum'](point1[2], point2[2]), d['MaritalStatus'](point1[3], point2[3]),
+                 d['Occupation'](point1[4], point2[4]), d['Relationship'](point1[5], point2[5]),
+                 d['Race'](point1[6], point2[6]), d['Gender'](point1[7], point2[7]),
+                 d['HoursPerWeek'](point1[8], point2[8]), d['NativeCountry'](point1[9], point2[9]),
+                 d['Income'](point1[10], point2[10]), d['NetCapital'](point1[11], point2[11])]
+        dists = np.multiply(dists, list(self.weights.values()))
 
-        return self.aggregate_dists(dists)
+        return d['Aggregate'](dists)
 
     def distance_matrix(self, data):
         n = len(data.index)
@@ -67,13 +89,11 @@ class Distance:
             for j in range(i):
                 d1 = data.iloc[i]
                 d2 = data.iloc[j]
-                d1v = [d1.Age, d1.EducationNum, d1.HoursPerWeek, d1.NetCapital, d1.Gender, d1.Race,
-                       d1.WorkClass, d1.MaritalStatus, d1.Occupation, d2.Relationship, d1.NativeCountry]
-                d2v = [d2.Age, d2.EducationNum, d2.HoursPerWeek, d2.NetCapital, d2.Gender, d2.Race,
-                       d2.WorkClass, d2.MaritalStatus, d2.Occupation, d2.Relationship, d2.NativeCountry]
+                d1v = [d1.Age, d1.WorkClass, d1.EducationNum, d1.MaritalStatus, d1.Occupation,
+                       d1.Relationship, d1.Race, d1.Gender, d1.HoursPerWeek, d1.NativeCountry, d1.Income, d1.NetCapital]
+                d2v = [d2.Age, d2.WorkClass, d2.EducationNum, d2.MaritalStatus, d2.Occupation,
+                       d2.Relationship, d2.Race, d2.Gender, d2.HoursPerWeek, d2.NativeCountry, d2.Income, d2.NetCapital]
                 d = self.standard_dist(d1v, d2v)
                 matrix[i, j] = d
                 matrix[j, i] = d
         return matrix
-
-# -------------------------DISTANCE CLASS-------------------------
