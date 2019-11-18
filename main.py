@@ -7,7 +7,6 @@ from utils import read_data
 from TDA_analysis import tda_analysis
 from TDA_analysis import plot_results
 
-inf = float("inf")
 plt.style.use('ggplot')
 
 if __name__ == '__main__':
@@ -36,8 +35,29 @@ if __name__ == '__main__':
     # ----------TDA Test----------
     print("\nTDA Test:")
 
-    variable = 'Income'
-    results = tda_analysis(data, variable=variable, N_sig=50)
-    types = data[variable].unique()
+    # ----------Wage geometry between genders----------
+    print("Geometry of males and females with and without salary.")
+    variable = 'Gender'
+    N = 25
+    N_sig = 25
 
-    plot_results(results, types, N_sig=50)
+    dist = distance.Distance()
+    dist.weights['Income'] = 1
+    results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results)
+    dist.weights['Income'] = 0
+    results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results)
+
+    # ----------Geometries of the rich and poor----------
+    print("Geometries of the rich and poor.")
+    variable = 'Income'
+    dist.weights['Income'] = 1
+    results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results)
+
+    # ----------Geometries of the different races----------
+    print("Geometries of the different races.")
+    variable = 'Race'
+    results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results)
