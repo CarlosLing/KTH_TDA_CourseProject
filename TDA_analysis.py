@@ -60,8 +60,8 @@ def tda_analysis(data, variable='Income', dist=distance.Distance(), N=50, N_sig=
     return results
 
 
-COLORS = ['red', 'blue', 'green', 'magenta']
-DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta']
+COLORS = ['red', 'blue', 'green', 'magenta', 'yellow']
+DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'orange']
 
 
 def plot_results(results, xmax=float('nan')):
@@ -75,11 +75,13 @@ def plot_results(results, xmax=float('nan')):
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
         lower = results[t]['mean_norm'] - 2 * results[t]['sd_norm']
         upper.plot(color=color)
-        results[t]['mean_norm'].plot(color=dcolor)
+        mean = results[t]['mean_norm'].plot(color=dcolor, label=t)
         lower.plot(color=color)
+
 
     if not math.isnan(xmax) : plt.axis(xmax=xmax)
     plt.axis(xmin=0)
+    plt.legend()
     plt.show()
 
     for i in range(n_t):
@@ -92,8 +94,9 @@ def plot_results(results, xmax=float('nan')):
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
         lower = results[t]['mean_norm'] - 2 * results[t]['sd_norm']
         upper.plot(color=color)
-        results[t]['mean_norm'].plot(color=dcolor)
+        results[t]['mean_norm'].plot(color=dcolor, label=t)
         lower.plot(color=color)
         if not math.isnan(xmax) : plt.axis(xmax=xmax)
         plt.axis(xmin=0)
+        plt.legend()
         plt.show()

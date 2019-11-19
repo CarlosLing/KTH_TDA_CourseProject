@@ -125,7 +125,7 @@ class pcf_max(object):
         return coef*integral
 
 
-    def plot(self,border=0,color="No",linewidth=1.0, alpha=1):
+    def plot(self,border=0,color="No",label=-1,linewidth=1.0, alpha=1):
         '''Plots with borders shifted to the left and right given by borders'''
         if border<0:
             raise ValueError("border has to be non-negative")
@@ -135,9 +135,15 @@ class pcf_max(object):
             x=np.append(x,x[-1]+border)
             y=np.append(y,y[-1])
         if color=="No":
-            plt.plot(x, y, linewidth=linewidth, drawstyle='steps-post', alpha=alpha)
+            if label != -1:
+                plt.plot(x, y, label=label, linewidth=linewidth, drawstyle='steps-post', alpha=alpha)
+            else:
+                plt.plot(x, y, linewidth=linewidth, drawstyle='steps-post', alpha=alpha)
         else:
-            plt.plot(x, y, color=color, linewidth=linewidth,drawstyle='steps-post', alpha=alpha)
+            if label != -1:
+                plt.plot(x, y, label=label, color=color, linewidth=linewidth, drawstyle='steps-post', alpha=alpha)
+            else:
+                plt.plot(x, y, color=color, linewidth=linewidth,drawstyle='steps-post', alpha=alpha)
 
 
 
