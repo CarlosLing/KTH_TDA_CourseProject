@@ -34,14 +34,13 @@ if __name__ == '__main__':
 
     # ----------TDA Test----------
     print("\nTDA Test:")
+    N = 25
+    N_sig = 25
+    dist = distance.Distance()
 
     # ----------Wage geometry between genders----------
     print("Geometry of males and females with and without salary.")
     variable = 'Gender'
-    N = 25
-    N_sig = 25
-
-    dist = distance.Distance()
     dist.weights['Income'] = 1
     results = tda_analysis(data, seed=0, dist=dist, variable=variable, N=N, N_sig=N_sig)
     plot_results(results)
