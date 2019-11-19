@@ -2,6 +2,13 @@ import pandas as pd
 import numpy as np
 from utils import read_GDP
 
+AGE_RANGE = 73
+EDUCATION_RANGE = 15
+HPW_RANGE = 98
+CAPITAL_RANGE = 104355
+RELATIONSHIP_RANGE = 4
+GDP_RANGE = 29126.373789999998
+
 
 def p_norm_dist(values1, values2, p=1):
     if isinstance(values1, list):
@@ -56,18 +63,18 @@ class Distance:
         }
 
         self.weights = {
-            'Age': 1,
+            'Age': 1/AGE_RANGE,
             'WorkClass': 1,
-            'EducationNum': 1,
+            'EducationNum': 1/EDUCATION_RANGE,
             'MaritalStatus': 1,
             'Occupation': 1,
             'Relationship': 1,
             'Race': 1,
             'Gender': 1,
-            'HoursPerWeek': 1,
-            'NativeCountry': 1e-5,
+            'HoursPerWeek': 1/HPW_RANGE,
+            'NativeCountry': 1/GDP_RANGE,
             'Income': 1,
-            'NetCapital': 1e-5
+            'NetCapital': 1/CAPITAL_RANGE
         }
 
     def standard_dist(self, point1, point2):
