@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # ----------TDA Test----------
     print("\nTDA Test:")
-    N = 25
+    N = 15
     N_sig = 25
     dist = distance.Distance()
 
@@ -59,4 +59,4 @@ if __name__ == '__main__':
     print("Geometries of the different races.")
     variable = 'Race'
     results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=5)

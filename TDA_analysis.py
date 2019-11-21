@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import NEWDistance as distance
 import math
+import matplotlib as mp
 
 inf = float("inf")
 
@@ -60,8 +61,7 @@ def tda_analysis(data, variable='Income', dist=distance.Distance(), N=50, N_sig=
     return results
 
 
-COLORS = ['red', 'blue', 'green', 'magenta', 'yellow']
-DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'orange']
+COLORS = ['red', 'blue', 'green', 'magenta', 'yellow', 'white', 'cyan', 'orange', 'lightpink']
 
 
 def plot_results(results, xmax=float('nan')):
@@ -71,15 +71,16 @@ def plot_results(results, xmax=float('nan')):
     for i in range(n_t):
         t = types[i]
         color = COLORS[i]
-        dcolor = DCOLORS[i]
+        dcolor = mp.colors.rgb_to_hsv(mp.colors.to_rgb(COLORS[i]))
+        dcolor[2] = dcolor[2] / 2
+        dcolor = mp.colors.hsv_to_rgb(dcolor)
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
         lower = results[t]['mean_norm'] - 2 * results[t]['sd_norm']
         upper.plot(color=color)
-        mean = results[t]['mean_norm'].plot(color=dcolor, label=t)
+        results[t]['mean_norm'].plot(color=dcolor, label=t)
         lower.plot(color=color)
 
-
-    if not math.isnan(xmax) : plt.axis(xmax=xmax)
+    if not math.isnan(xmax): plt.axis(xmax=xmax)
     plt.axis(xmin=0)
     plt.legend()
     plt.show()
@@ -88,7 +89,9 @@ def plot_results(results, xmax=float('nan')):
         plt.figure()
         t = types[i]
         color = COLORS[i]
-        dcolor = DCOLORS[i]
+        dcolor = mp.colors.rgb_to_hsv(mp.colors.to_rgb(COLORS[i]))
+        dcolor[2] = dcolor[2] / 2
+        dcolor = mp.colors.hsv_to_rgb(dcolor)
         for j in range(len(results[types[0]]['barcodes'])):
             results[t]['normalized_sign'][j].plot(color='black', alpha=0.2)
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
@@ -96,7 +99,7 @@ def plot_results(results, xmax=float('nan')):
         upper.plot(color=color)
         results[t]['mean_norm'].plot(color=dcolor, label=t)
         lower.plot(color=color)
-        if not math.isnan(xmax) : plt.axis(xmax=xmax)
+        if not math.isnan(xmax): plt.axis(xmax=xmax)
         plt.axis(xmin=0)
         plt.legend()
         plt.show()
