@@ -1,11 +1,7 @@
-import numpy as np
 from persim import plot_diagrams
 from ripser import ripser
-import matplotlib.pyplot as plt
-import NEWDistance as distance
+from TDA_analysis import *
 from utils import read_data
-from TDA_analysis import tda_analysis
-from TDA_analysis import plot_results
 
 plt.style.use('ggplot')
 
@@ -35,59 +31,82 @@ if __name__ == '__main__':
     # ----------TDA Test----------
     print("\nTDA Test:")
     N = 25
-    N_sig = 25
+    N_sig = 50
     dist = distance.Distance()
 
     # ----------Wage geometry between genders----------
     print("Geometry of males and females with and without salary.")
     variable = 'Gender'
-    dist.weights['Income'] = 1
     results = tda_analysis(data, seed=0, dist=dist, variable=variable, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=1)
     dist.weights['Income'] = 0
     results = tda_analysis(data, seed=0, dist=dist, variable=variable, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=1)
+    dist = distance.Distance()
 
     # ----------Geometries of the rich and poor----------
     print("Geometries of the rich and poor.")
     variable = 'Income'
+    print("All sub-distances currently active.")
     results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_compiled_results(results, xmax=1)
+    for key in dist.weights.keys():
+        print("Current inactive distance: " + key)
+        weight = dist.weights[key]
+        dist.weights[key] = 0
+        results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+        plot_compiled_results(results, xmax=1)
+        dist.weights[key] = weight
+    print("Marital status, occupation and gender seem important. Check this!")
+    print("Without marital status, occupation and gender.")
+    dist.weights['MaritalStatus'] = 0
+    dist.weights['Occupation'] = 0
+    dist.weights['Gender'] = 0
+    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+    plot_compiled_results(results, xmax=1)
+
+    print("Only marital status, occupation and gender.")
+    dist.zero_weights()
+    dist.weights['MaritalStatus'] = 1
+    dist.weights['Occupation'] = 1
+    dist.weights['Gender'] = 1
+    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+    plot_compiled_results(results, xmax=1)
+    print("Weird...")
 
     # ----------Geometries of the rich and poor----------
-    print("Geometries of the rich and poor.")
+    print("Geometries of the rich and poor with different country distance.")
     variable = 'Income'
     dist.distances['NativeCountry'] = distance.indicator
     dist.weights['NativeCountry'] = 1
     results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=1)
+    dist = distance.Distance()
 
     # ----------Geometries of the different races----------
     print("Geometries of the different races.")
     variable = 'Race'
     results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=1)
 
     # ----------Geometries of the different Relationship----------
     print("Geometries of the different Relationship.")
     variable = 'Relationship'
-    results = tda_analysis(data, dist=dist, variable=variable, N=30, N_sig=50)
-    plot_results(results)
+    results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results, xmax=1)
 
     # ----------Geometries of the different Marital S----------
     print("Geometries of the different Marital Status.")
     marital_data = data[data['MaritalStatus'] != 'Married-AF-spouse']
-    #marital_data = marital_data [marital_data ['MaritalStatus'] != 'Married-spouse-absent']
     variable = 'MaritalStatus'
-    results = tda_analysis(marital_data , dist=dist, variable=variable, N=30, N_sig=50)
-    plot_results(results)
+    results = tda_analysis(marital_data , dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results, xmax=1)
 
     # ----------Geometries of the different WorkClass----------
     print("Geometries of the different WorkClass.")
     WorkClass_data = data[data['WorkClass'] != '?']
     WorkClass_data = WorkClass_data[WorkClass_data['WorkClass'] != 'Never-worked']
     WorkClass_data = WorkClass_data[WorkClass_data['WorkClass'] != 'Without-pay']
-    # WorkClass_data = WorkClass_data[WorkClass_data['WorkClass'] != ]
     variable = 'WorkClass'
     results = tda_analysis(WorkClass_data, dist=dist, variable=variable, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=1)

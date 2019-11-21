@@ -67,15 +67,17 @@ DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'orange']
 
 
 def plot_results(results, xmax=float('nan')):
+    plot_compiled_results(results, xmax)
+    plot_individual_results(results, xmax)
+
+def plot_compiled_results(results, xmax=float('nan')):
     types = list(results.keys())
     n_t = len(types)
     plt.figure()
     for i in range(n_t):
         t = types[i]
-        color = COLORS[i]
-        dcolor = mp.colors.rgb_to_hsv(mp.colors.to_rgb(COLORS[i]))
-        dcolor[2] = dcolor[2] / 2
-        dcolor = mp.colors.hsv_to_rgb(dcolor)
+        color = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 1])
+        dcolor = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 0.5])
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
         lower = results[t]['mean_norm'] - 2 * results[t]['sd_norm']
         upper.plot(color=color)
@@ -87,13 +89,16 @@ def plot_results(results, xmax=float('nan')):
     plt.legend()
     plt.show()
 
+
+def plot_individual_results(results, xmax=float('nan')):
+    types = list(results.keys())
+    n_t = len(types)
+    plt.figure()
     for i in range(n_t):
         plt.figure()
         t = types[i]
-        color = COLORS[i]
-        dcolor = mp.colors.rgb_to_hsv(mp.colors.to_rgb(COLORS[i]))
-        dcolor[2] = dcolor[2] / 2
-        dcolor = mp.colors.hsv_to_rgb(dcolor)
+        color = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 1])
+        dcolor = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 0.5])
         for j in range(len(results[types[0]]['barcodes'])):
             results[t]['normalized_sign'][j].plot(color='black', alpha=0.2)
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
