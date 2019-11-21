@@ -9,8 +9,9 @@ import matplotlib as mp
 inf = float("inf")
 
 
-def tda_analysis(data, variable='Income', dist=distance.Distance(), N=50, N_sig=20):
+def tda_analysis(data, variable='Income', dist=distance.Distance(), seed=float('nan'), N=50, N_sig=20):
     # Do analysis of signatures regarding variable
+    if not math.isnan(seed): np.random.seed(seed)
     types = data[variable].unique()
 
     results = dict()
@@ -61,7 +62,8 @@ def tda_analysis(data, variable='Income', dist=distance.Distance(), N=50, N_sig=
     return results
 
 
-COLORS = ['red', 'blue', 'green', 'magenta', 'yellow', 'white', 'cyan', 'orange', 'lightpink']
+COLORS = ['red', 'blue', 'green', 'magenta', 'yellow']
+DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'orange']
 
 
 def plot_results(results, xmax=float('nan')):

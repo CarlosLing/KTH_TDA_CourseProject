@@ -34,7 +34,7 @@ def dist(a, b):
 
     # Check this distances
     # Categorical distances with mapping
-    Relationship = abs(a.RelationshipMap != b.RelationshipMap) / RELATIONSHIP_RANGE
+    Relationship = abs(a.RelationshipMap - b.RelationshipMap) / RELATIONSHIP_RANGE
     Country = abs(a.GDP_PC - b.GDP_PC) / GDP_RANGE
 
     distance = np.sqrt(Age ** 2 + Education ** 2 + Gender ** 2 + WorkClass ** 2 + MaritalStatus ** 2 +
