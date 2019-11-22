@@ -104,3 +104,7 @@ class Distance:
                 matrix[i, j] = d
                 matrix[j, i] = d
         return matrix
+
+    def zero_weights(self):
+        for key in self.weights.keys():
+            self.weights[key] = 0

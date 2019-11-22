@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import NEWDistance as distance
 import math
+import matplotlib as mp
 
 inf = float("inf")
 
@@ -61,35 +62,43 @@ def tda_analysis(data, variable='Income', dist=distance.Distance(), seed=float('
     return results
 
 
-COLORS = ['red', 'blue', 'green', 'magenta', 'cyan', 'yellow']
-DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'darkcyan', 'orange']
+COLORS = ['red', 'blue', 'green', 'magenta', 'yellow']
+DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'orange']
 
 
 def plot_results(results, xmax=float('nan')):
+    plot_compiled_results(results, xmax)
+    plot_individual_results(results, xmax)
+
+def plot_compiled_results(results, xmax=float('nan')):
     types = list(results.keys())
     n_t = len(types)
     plt.figure()
     for i in range(n_t):
         t = types[i]
-        color = COLORS[i]
-        dcolor = DCOLORS[i]
+        color = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 1])
+        dcolor = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 0.5])
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
         lower = results[t]['mean_norm'] - 2 * results[t]['sd_norm']
         upper.plot(color=color)
-        mean = results[t]['mean_norm'].plot(color=dcolor, label=t)
+        results[t]['mean_norm'].plot(color=dcolor, label=t)
         lower.plot(color=color)
 
-
-    if not math.isnan(xmax) : plt.axis(xmax=xmax)
+    if not math.isnan(xmax): plt.axis(xmax=xmax)
     plt.axis(xmin=0)
     plt.legend()
     plt.show()
 
+
+def plot_individual_results(results, xmax=float('nan')):
+    types = list(results.keys())
+    n_t = len(types)
+    plt.figure()
     for i in range(n_t):
         plt.figure()
         t = types[i]
-        color = COLORS[i]
-        dcolor = DCOLORS[i]
+        color = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 1])
+        dcolor = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 0.5])
         for j in range(len(results[types[0]]['barcodes'])):
             results[t]['normalized_sign'][j].plot(color='black', alpha=0.2)
         upper = results[t]['mean_norm'] + 2 * results[t]['sd_norm']
@@ -97,7 +106,7 @@ def plot_results(results, xmax=float('nan')):
         upper.plot(color=color)
         results[t]['mean_norm'].plot(color=dcolor, label=t)
         lower.plot(color=color)
-        if not math.isnan(xmax) : plt.axis(xmax=xmax)
+        if not math.isnan(xmax): plt.axis(xmax=xmax)
         plt.axis(xmin=0)
         plt.legend()
         plt.show()
