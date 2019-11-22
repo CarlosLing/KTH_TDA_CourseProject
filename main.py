@@ -6,6 +6,7 @@ import NEWDistance as distance
 from utils import read_data
 from TDA_analysis import tda_analysis
 from TDA_analysis import plot_results
+from TDA_analysis import plot_diff
 
 plt.style.use('ggplot')
 
@@ -34,8 +35,8 @@ if __name__ == '__main__':
 
     # ----------TDA Test----------
     print("\nTDA Test:")
-    N = 25
-    N_sig = 25
+    N = 50
+    N_sig = 100
     dist = distance.Distance()
 
     # ----------Wage geometry between genders----------
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     variable = 'Gender'
     dist.weights['Income'] = 1
     results = tda_analysis(data, seed=0, dist=dist, variable=variable, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results, xmax=0.6)
     dist.weights['Income'] = 0
     results = tda_analysis(data, seed=0, dist=dist, variable=variable, N=N, N_sig=N_sig)
     plot_results(results)
@@ -52,7 +53,8 @@ if __name__ == '__main__':
     print("Geometries of the rich and poor.")
     variable = 'Income'
     results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
-    plot_results(results)
+    plot_results(results,xmax=0.7)
+    plot_diff(results, xmax=0.7, c)
 
     # ----------Geometries of the rich and poor----------
     print("Geometries of the rich and poor.")

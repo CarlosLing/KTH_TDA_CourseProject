@@ -101,3 +101,28 @@ def plot_results(results, xmax=float('nan')):
         plt.axis(xmin=0)
         plt.legend()
         plt.show()
+
+
+def plot_diff(results, xmax=float('nan'), ymin=float('nan'), ymax=float('nan'), x_mean=0.25, alpha=0.2):
+    types = list(results.keys())
+    n_t = len(types)
+    N_sig = len(results[types[0]]['barcodes'])
+    for i in range(n_t):
+        diff_sign = []
+        sum_diff_sign = 0
+        plt.figure()
+        t = types[i]
+        dcolor = DCOLORS[i]
+        for j in range(N_sig):
+            value = results[t]['normalized_sign'][j].evaluate(x_mean)
+            diff_sign.append(results[t]['normalized_sign'][j]-value)
+            sum_diff_sign = sum_diff_sign + diff_sign[j]
+            diff_sign[j].plot(color='black', alpha=alpha)
+        mean_diff = (1/N_sig) * sum_diff_sign
+        mean_diff.plot(color=dcolor, label=t)
+        if not math.isnan(xmax): plt.axis(xmax=xmax)
+        if not math.isnan(ymin): plt.axis(ymin=ymin)
+        if not math.isnan(ymax): plt.axis(ymax=ymax)
+        plt.axis(xmin=0)
+        plt.legend()
+        plt.show()
