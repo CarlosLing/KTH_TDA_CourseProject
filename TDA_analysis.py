@@ -135,3 +135,35 @@ def plot_diff(results, xmax=float('nan'), ymin=float('nan'), ymax=float('nan'), 
         plt.axis(xmin=0)
         plt.legend()
         plt.show()
+
+
+def histogram(results, x, bins):
+    types = list(results.keys())
+    n_t = len(types)
+    N_sig = len(results[types[0]]['barcodes'])
+    for i in range(n_t):
+        plt.figure()
+        t = types[i]
+        values = []
+        for j in range(N_sig):
+            value = results[t]['normalized_sign'][j].evaluate(x)
+            values.append(value)
+        plt.hist(values, label=t, bins=bins)
+        plt.legend()
+        plt.show()
+
+
+def test_mean_significance(results, types, xmax=float('nan')):
+    n_t = len(types)
+    plt.figure()
+    for i in range(n_t):
+        t = types[i]
+        dcolor = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 0.5])
+        results[t]['mean_norm'].plot(color=dcolor, label=t)
+
+    types[0]['mean_norm'] - types[0]['mean_norm']
+
+    if not math.isnan(xmax): plt.axis(xmax=xmax)
+    plt.axis(xmin=0)
+    plt.legend()
+    plt.show()

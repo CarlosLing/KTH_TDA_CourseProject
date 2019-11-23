@@ -47,14 +47,15 @@ if __name__ == '__main__':
     # ----------Geometries of the rich and poor----------
     print("Geometries of the rich and poor.")
     variable = 'Income'
+    seed = 1
     print("All sub-distances currently active.")
-    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+    results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
     plot_compiled_results(results, xmax=1)
     for key in dist.weights.keys():
         print("Current inactive distance: " + key)
         weight = dist.weights[key]
         dist.weights[key] = 0
-        results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+        results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
         plot_compiled_results(results, xmax=1)
         dist.weights[key] = weight
     print("Marital status, occupation and gender seem important. Check this!")
@@ -62,7 +63,7 @@ if __name__ == '__main__':
     dist.weights['MaritalStatus'] = 0
     dist.weights['Occupation'] = 0
     dist.weights['Gender'] = 0
-    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+    results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
     plot_compiled_results(results, xmax=1)
 
     print("Only marital status, occupation and gender.")
@@ -70,7 +71,7 @@ if __name__ == '__main__':
     dist.weights['MaritalStatus'] = 1
     dist.weights['Occupation'] = 1
     dist.weights['Gender'] = 1
-    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
+    results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
     plot_compiled_results(results, xmax=1)
     print("Weird...")
 
