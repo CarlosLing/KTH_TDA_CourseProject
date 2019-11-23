@@ -62,13 +62,10 @@ def tda_analysis(data, variable='Income', dist=distance.Distance(), seed=float('
     return results
 
 
-COLORS = ['red', 'blue', 'green', 'magenta', 'yellow']
-DCOLORS = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'orange']
-
-
 def plot_results(results, xmax=float('nan')):
     plot_compiled_results(results, xmax)
     plot_individual_results(results, xmax)
+
 
 def plot_compiled_results(results, xmax=float('nan')):
     types = list(results.keys())
@@ -93,7 +90,6 @@ def plot_compiled_results(results, xmax=float('nan')):
 def plot_individual_results(results, xmax=float('nan')):
     types = list(results.keys())
     n_t = len(types)
-    plt.figure()
     for i in range(n_t):
         plt.figure()
         t = types[i]
@@ -110,60 +106,3 @@ def plot_individual_results(results, xmax=float('nan')):
         plt.axis(xmin=0)
         plt.legend()
         plt.show()
-
-
-def plot_diff(results, xmax=float('nan'), ymin=float('nan'), ymax=float('nan'), x_mean=0.25, alpha=0.2):
-    types = list(results.keys())
-    n_t = len(types)
-    N_sig = len(results[types[0]]['barcodes'])
-    for i in range(n_t):
-        diff_sign = []
-        sum_diff_sign = 0
-        plt.figure()
-        t = types[i]
-        dcolor = DCOLORS[i]
-        for j in range(N_sig):
-            value = results[t]['normalized_sign'][j].evaluate(x_mean)
-            diff_sign.append(results[t]['normalized_sign'][j]-value)
-            sum_diff_sign = sum_diff_sign + diff_sign[j]
-            diff_sign[j].plot(color='black', alpha=alpha)
-        mean_diff = (1/N_sig) * sum_diff_sign
-        mean_diff.plot(color=dcolor, label=t)
-        if not math.isnan(xmax): plt.axis(xmax=xmax)
-        if not math.isnan(ymin): plt.axis(ymin=ymin)
-        if not math.isnan(ymax): plt.axis(ymax=ymax)
-        plt.axis(xmin=0)
-        plt.legend()
-        plt.show()
-
-
-def histogram(results, x, bins):
-    types = list(results.keys())
-    n_t = len(types)
-    N_sig = len(results[types[0]]['barcodes'])
-    for i in range(n_t):
-        plt.figure()
-        t = types[i]
-        values = []
-        for j in range(N_sig):
-            value = results[t]['normalized_sign'][j].evaluate(x)
-            values.append(value)
-        plt.hist(values, label=t, bins=bins)
-        plt.legend()
-        plt.show()
-
-
-def test_mean_significance(results, types, xmax=float('nan')):
-    n_t = len(types)
-    plt.figure()
-    for i in range(n_t):
-        t = types[i]
-        dcolor = mp.colors.hsv_to_rgb([2 / 3 * i / (n_t - 1), 1, 0.5])
-        results[t]['mean_norm'].plot(color=dcolor, label=t)
-
-    types[0]['mean_norm'] - types[0]['mean_norm']
-
-    if not math.isnan(xmax): plt.axis(xmax=xmax)
-    plt.axis(xmin=0)
-    plt.legend()
-    plt.show()

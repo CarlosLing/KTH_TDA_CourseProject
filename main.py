@@ -30,8 +30,8 @@ if __name__ == '__main__':
 
     # ----------TDA Test----------
     print("\nTDA Test:")
-    N = 25
-    N_sig = 50
+    N = 15
+    N_sig = 25
     dist = distance.Distance()
 
     # ----------Wage geometry between genders----------
@@ -47,15 +47,14 @@ if __name__ == '__main__':
     # ----------Geometries of the rich and poor----------
     print("Geometries of the rich and poor.")
     variable = 'Income'
-    seed = 1
     print("All sub-distances currently active.")
-    results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
+    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
     plot_compiled_results(results, xmax=1)
     for key in dist.weights.keys():
         print("Current inactive distance: " + key)
         weight = dist.weights[key]
         dist.weights[key] = 0
-        results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
+        results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
         plot_compiled_results(results, xmax=1)
         dist.weights[key] = weight
     print("Marital status, occupation and gender seem important. Check this!")
@@ -63,7 +62,7 @@ if __name__ == '__main__':
     dist.weights['MaritalStatus'] = 0
     dist.weights['Occupation'] = 0
     dist.weights['Gender'] = 0
-    results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
+    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
     plot_compiled_results(results, xmax=1)
 
     print("Only marital status, occupation and gender.")
@@ -71,9 +70,9 @@ if __name__ == '__main__':
     dist.weights['MaritalStatus'] = 1
     dist.weights['Occupation'] = 1
     dist.weights['Gender'] = 1
-    results = tda_analysis(data, dist=dist, variable=variable, seed=seed, N=N, N_sig=N_sig)
+    results = tda_analysis(data, dist=dist, variable=variable, seed=0, N=N, N_sig=N_sig)
     plot_compiled_results(results, xmax=1)
-    print("Weird...")
+    dist = distance.Distance()
 
     # ----------Geometries of the rich and poor----------
     print("Geometries of the rich and poor with different country distance.")
@@ -96,7 +95,7 @@ if __name__ == '__main__':
     results = tda_analysis(data, dist=dist, variable=variable, N=N, N_sig=N_sig)
     plot_results(results, xmax=1)
 
-    # ----------Geometries of the different Marital S----------
+    # ----------Geometries of the different Marital Status----------
     print("Geometries of the different Marital Status.")
     marital_data = data[data['MaritalStatus'] != 'Married-AF-spouse']
     variable = 'MaritalStatus'
@@ -110,4 +109,12 @@ if __name__ == '__main__':
     WorkClass_data = WorkClass_data[WorkClass_data['WorkClass'] != 'Without-pay']
     variable = 'WorkClass'
     results = tda_analysis(WorkClass_data, dist=dist, variable=variable, N=N, N_sig=N_sig)
+    plot_results(results, xmax=1)
+
+    # ----------Geometries of the Occupations----------
+    print("Geometries of the different occupations.")
+    Occupation_data = data[data['Occupation'] != 'Armed-Forces']
+    # Occupation_data = Occupation_data[Occupation_data['Occupation'] != 'Priv-house-serv']
+    variable = 'Occupation'
+    results = tda_analysis(Occupation_data, dist=dist, variable=variable, N=N, N_sig=N_sig)
     plot_results(results, xmax=1)
